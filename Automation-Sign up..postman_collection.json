@@ -1,0 +1,208 @@
+{
+	"info": {
+		"_postman_id": "b9cb0bcd-e0a5-4004-ade8-0736decd4c9f",
+		"name": "Automation-Sign up.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "23159132"
+	},
+	"item": [
+		{
+			"name": "Sign in",
+			"item": [
+				{
+					"name": "https://staging-be-ecom.techserve4u.com/api/user/signin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var JsonData=JSON.parse(responseBody);\r",
+									"\r",
+									"pm.environment.set(\"buyer_token\", JsonData.token);\r",
+									"\r",
+									"\r",
+									"\r",
+									"pm.test(\"Response time is less than 1000ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2M2NiNDRkZTE4ZGRjYWI5OTU4ODU1MTciLCJyb2xlIjoidXNlciIsImVtYWlsIjoiYnJ1aXphaGFtaWRAZ21haWwuY29tIiwiaWF0IjoxNjc0MjY2MzI2LCJleHAiOjE2NzQzNTI3MjZ9.wrrLKl73v7_7rcrBTzMFW29d1ouD34tEKBxT7OILj_g"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"password\": \"12345678\",\n  \"email\": \"bruizahamid@gmail.com\"\n}"
+						},
+						"url": {
+							"raw": "https://staging-be-ecom.techserve4u.com/api/user/signin",
+							"protocol": "https",
+							"host": [
+								"staging-be-ecom",
+								"techserve4u",
+								"com"
+							],
+							"path": [
+								"api",
+								"user",
+								"signin"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Verify user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{buyer_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://staging-be-ecom.techserve4u.com/api/user/verify",
+							"protocol": "https",
+							"host": [
+								"staging-be-ecom",
+								"techserve4u",
+								"com"
+							],
+							"path": [
+								"api",
+								"user",
+								"verify"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "As a buyer I should not be able to sign up using an existing registered email.",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"The Status code should be 400\", function () {\r",
+							"    pm.response.to.have.status(400);\r",
+							"\r",
+							"pm.test(\"Response time is less than 1000ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+							"});\r",
+							"});\r",
+							"\r",
+							"var JsonData=JSON.parse(responseBody)\r",
+							"var schema_Validation = {\r",
+							"    \"$schema\": \"https://json-schema.org/draft/2019-09/schema\",\r",
+							"    \"$id\": \"http://example.com/example.json\",\r",
+							"    \"type\": \"object\",\r",
+							"    \"default\": {},\r",
+							"    \"title\": \"Root Schema\",\r",
+							"    \"required\": [\r",
+							"        \"message\"\r",
+							"    ],\r",
+							"    \"properties\": {\r",
+							"        \"message\": {\r",
+							"            \"type\": \"string\",\r",
+							"            \"default\": \"\",\r",
+							"            \"title\": \"The message Schema\",\r",
+							"            \"examples\": [\r",
+							"                \"User already registered\"\r",
+							"            ]\r",
+							"        }\r",
+							"    },\r",
+							"    \"examples\": [{\r",
+							"        \"message\": \"User already registered\"\r",
+							"    }]\r",
+							"}\r",
+							"  \r",
+							"\r",
+							"pm.test('Schema is valid', function () {\r",
+							"    pm.expect(tv4.validate(JsonData, schema_Validation)).to.be.true;\r",
+							"    \r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2M2NiNDRkZTE4ZGRjYWI5OTU4ODU1MTciLCJyb2xlIjoidXNlciIsImVtYWlsIjoiYnJ1aXphaGFtaWRAZ21haWwuY29tIiwiaWF0IjoxNjc0MjY2MzI2LCJleHAiOjE2NzQzNTI3MjZ9.wrrLKl73v7_7rcrBTzMFW29d1ouD34tEKBxT7OILj_g"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"email\": \"bruizahamid@gmail.com\",\n  \"name\": \"munna\",\n  \"password\": \"12345678\"\n}"
+				},
+				"url": {
+					"raw": "https://staging-be-ecom.techserve4u.com/api/user/signup",
+					"protocol": "https",
+					"host": [
+						"staging-be-ecom",
+						"techserve4u",
+						"com"
+					],
+					"path": [
+						"api",
+						"user",
+						"signup"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
